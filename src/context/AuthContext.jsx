@@ -4,8 +4,8 @@ import { supabase } from '../lib/supabase'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser]     = useState(null)   // supabase auth user
-  const [profile, setProfile] = useState(null) // profiles table row (role, name)
+  const [user, setUser]       = useState(null)
+  const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
 
   async function fetchProfile(authUser) {
@@ -19,13 +19,11 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    // Check existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       fetchProfile(session?.user ?? null).finally(() => setLoading(false))
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       fetchProfile(session?.user ?? null)
@@ -41,16 +39,27 @@ export function AuthProvider({ children }) {
   }
 
   async function signUp(email, password, name, role) {
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name, role } }
+    })
     if (error) throw error
 
-    // Create profile row
-    await supabase.from('profiles').insert({
-      id: data.user.id,
-      email,
-      name,
-      role,
-    })
+    // Auto-create profile row
+    if (data.user) {
+      await supabase.from('profiles').insert({
+        id: data.user.id,
+        email,
+        name,
+        role,
+      })
+    }
+
+    // Auto-login immediately
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
+    if (loginError) throw loginError
+
     return data
   }
 
