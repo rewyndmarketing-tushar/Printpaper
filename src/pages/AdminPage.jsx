@@ -47,10 +47,17 @@ function AllEnquiries({ setTab }) {
     { label: 'Total',     value: enquiries.length,                                         color: isDark ? C.text : '#1A1A1A' },
   ]
 
+  const th = { fontSize: 10.5, color: C.muted, fontFamily: '"DM Mono", monospace', letterSpacing: 1, textTransform: 'uppercase', padding: '10px 14px', textAlign: 'left', borderBottom: `1px solid ${isDark ? C.border : '#E8E5E0'}`, background: isDark ? C.card : '#F5F3EF', whiteSpace: 'nowrap' }
+  const td = { fontSize: 12.5, color: isDark ? C.text : '#1A1A1A', fontFamily: '"DM Mono", monospace', padding: '12px 14px', borderBottom: `1px solid ${isDark ? C.border : '#F0EDE8'}`, verticalAlign: 'middle' }
+
   return (
-    <div style={section}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
-        <SectionTitle title="All Enquiries" subtitle="Admin · Overview" />
+    <div style={{ padding: '28px 32px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>Admin · Overview</div>
+          <div style={{ fontSize: 22, fontFamily: '"Playfair Display", Georgia, serif', color: isDark ? C.text : '#1A1A1A', fontWeight: 700 }}>All Enquiries</div>
+        </div>
         <button onClick={() => setTab('new')} style={{ background: 'linear-gradient(135deg, #C8A96E, #A8893E)', color: '#0A0A0A', border: 'none', borderRadius: 7, padding: '9px 18px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', fontWeight: 700, boxShadow: '0 4px 12px #C8A96E33' }}>
           + New Enquiry
         </button>
@@ -67,13 +74,10 @@ function AllEnquiries({ setTab }) {
         ))}
       </div>
 
-      {/* Search + filter */}
-      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
-        <input
-          placeholder="Search by paper type or buyer..."
-          value={search} onChange={e => setSearch(e.target.value)}
-          style={{ flex: 1, background: isDark ? C.card : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E8E5E0'}`, borderRadius: 7, padding: '9px 14px', color: isDark ? C.text : '#1A1A1A', fontSize: 12, fontFamily: '"DM Mono", monospace', outline: 'none' }}
-        />
+      {/* Search + filters */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+        <input placeholder="Search by paper type or buyer..." value={search} onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, background: isDark ? C.card : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E8E5E0'}`, borderRadius: 7, padding: '8px 14px', color: isDark ? C.text : '#1A1A1A', fontSize: 12, fontFamily: '"DM Mono", monospace', outline: 'none' }} />
         {['all', 'open', 'responded', 'quoted', 'closed'].map(s => (
           <button key={s} onClick={() => setFilterStatus(s)} style={{ background: filterStatus === s ? '#C8A96E18' : 'transparent', color: filterStatus === s ? '#C8A96E' : C.muted, border: `1px solid ${filterStatus === s ? '#C8A96E44' : isDark ? C.border : '#E8E5E0'}`, borderRadius: 6, padding: '8px 12px', cursor: 'pointer', fontSize: 11, fontFamily: '"DM Mono", monospace', textTransform: 'capitalize' }}>
             {s}
@@ -81,12 +85,66 @@ function AllEnquiries({ setTab }) {
         ))}
       </div>
 
-      {loading && <div style={{ color: C.muted, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>Loading…</div>}
-      {!loading && filtered.length === 0 && <div style={{ color: C.muted, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>No enquiries found.</div>}
-      {filtered.map((enq) => {
-        const count = responses.filter((r) => r.enquiry_id === enq.id).length
-        return <EnquiryCard key={enq.id} enquiry={enq} responseCount={count} />
-      })}
+      {/* Table */}
+      <div style={{ background: isDark ? C.surface : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E8E5E0'}`, borderRadius: 12, overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              {['#', 'Date', 'Buyer', 'Paper Type', 'GSM', 'Coating', 'Shade', 'Qty', 'Responses', 'Status', 'Action'].map(h => (
+                <th key={h} style={th}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {loading && (
+              <tr><td colSpan={11} style={{ ...td, textAlign: 'center', color: C.muted }}>Loading…</td></tr>
+            )}
+            {!loading && filtered.length === 0 && (
+              <tr><td colSpan={11} style={{ ...td, textAlign: 'center', color: C.muted }}>No enquiries found</td></tr>
+            )}
+            {filtered.map((e, i) => {
+              const count = responses.filter(r => r.enquiry_id === e.id).length
+              const statusColor = { open: '#6E9EC8', responded: '#C8A96E', quoted: '#6EC89E', closed: '#666' }[e.status] || '#666'
+              return (
+                <tr key={e.id}
+                  onMouseEnter={ev => ev.currentTarget.style.background = isDark ? '#161616' : '#FAFAF8'}
+                  onMouseLeave={ev => ev.currentTarget.style.background = 'transparent'}
+                  style={{ transition: 'background 0.1s' }}
+                >
+                  <td style={{ ...td, color: C.muted, fontSize: 11 }}>{String(i + 1).padStart(2, '0')}</td>
+                  <td style={{ ...td, color: C.muted, fontSize: 11, whiteSpace: 'nowrap' }}>
+                    {new Date(e.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                  </td>
+                  <td style={{ ...td, color: C.blue, fontWeight: 500 }}>{e.profiles?.name || '—'}</td>
+                  <td style={{ ...td, fontWeight: 500 }}>{e.paper_type}</td>
+                  <td style={{ ...td, color: C.muted }}>{e.gsm}</td>
+                  <td style={{ ...td, color: C.muted }}>{e.coating}</td>
+                  <td style={{ ...td, color: C.muted }}>{e.shade}</td>
+                  <td style={{ ...td, whiteSpace: 'nowrap' }}>{e.quantity?.toLocaleString()} {e.unit}</td>
+                  <td style={{ ...td, textAlign: 'center' }}>
+                    <span style={{ background: count > 0 ? C.green + '22' : C.muted + '22', color: count > 0 ? C.green : C.muted, borderRadius: 4, padding: '2px 8px', fontSize: 11 }}>{count}</span>
+                  </td>
+                  <td style={td}>
+                    <span style={{ background: statusColor + '18', color: statusColor, border: `1px solid ${statusColor}33`, borderRadius: 4, padding: '3px 8px', fontSize: 10, fontFamily: '"DM Mono", monospace', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+                      {e.status}
+                    </span>
+                  </td>
+                  <td style={td}>
+                    <button onClick={() => setTab('responses')} style={{ background: 'transparent', color: C.accent, border: `1px solid ${C.accent}33`, borderRadius: 5, padding: '4px 10px', cursor: 'pointer', fontSize: 11, fontFamily: '"DM Mono", monospace' }}>
+                      View
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Count */}
+      <div style={{ marginTop: 10, fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace' }}>
+        Showing {filtered.length} of {enquiries.length} enquiries
+      </div>
     </div>
   )
 }
