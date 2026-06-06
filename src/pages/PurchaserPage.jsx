@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useTheme } from '../context/ThemeContext'
 import { useEnquiries } from '../hooks/useEnquiries'
 import { useQuotes } from '../hooks/useResponses'
 import { EnquiryCard } from '../components/EnquiryCard'
@@ -11,6 +12,7 @@ const section = { padding: '24px', maxWidth: 860, margin: '0 auto' }
 
 export default function PurchaserPage({ tab, setTab }) {
   const { user } = useAuth()
+  const { isDark } = useTheme()
   const { enquiries, loading, createEnquiry } = useEnquiries({ role: 'purchaser', userId: user?.id })
   const { quotes }  = useQuotes({ role: 'purchaser', userId: user?.id })
   const [submitting, setSubmitting] = useState(false)
@@ -27,7 +29,9 @@ export default function PurchaserPage({ tab, setTab }) {
       setSubmitting(false)
     }
   }
-
+  if (tab === 'enquiries' && !submitting) {
+    // show dashboard first
+  }
   if (tab === 'new') {
     if (done) return (
       <div style={section}>
@@ -57,7 +61,24 @@ export default function PurchaserPage({ tab, setTab }) {
   // My Enquiries tab
   return (
     <div style={section}>
-      <div style={{ color: C.muted, fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 20 }}>My Enquiries</div>
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 24 }}>
+        {[
+          { label: 'Total Enquiries', value: enquiries.length,                                          color: C.accent },
+          { label: 'Open',            value: enquiries.filter(e => e.status === 'open').length,         color: C.blue },
+          { label: 'Quoted',          value: enquiries.filter(e => e.status === 'quoted').length,       color: C.green },
+          { label: 'Quotes Received', value: quotes.length,                                             color: '#C86E9E' },
+        ].map(s => (
+          <div key={s.label} style={{ background: isDark ? C.surface : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E8E5E0'}`, borderRadius: 10, padding: '16px 18px', borderTop: `3px solid ${s.color}` }}>
+            <div style={{ fontSize: 26, fontWeight: 700, color: s.color, fontFamily: '"Playfair Display", serif' }}>{s.value}</div>
+            <div style={{ fontSize: 10, color: C.muted, fontFamily: '"DM Mono", monospace', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={{ color: C.muted, fontSize: 11, letterSpacing: 1, textTransform: 'uppercase' }}>My Enquiries</div>
+        <button onClick={() => setTab('new')} style={{ background: 'linear-gradient(135deg, #C8A96E, #A8893E)', color: '#0A0A0A', border: 'none', borderRadius: 7, padding: '8px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', fontWeight: 700 }}>+ New Enquiry</button>
+      </div>
       {loading && <div style={{ color: C.muted, fontSize: 13 }}>Loading…</div>}
       {!loading && enquiries.length === 0 && (
         <div style={{ color: C.muted, fontSize: 13 }}>
