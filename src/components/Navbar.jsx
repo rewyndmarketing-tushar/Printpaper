@@ -10,7 +10,7 @@ const roleConfig = {
 
 const tabs = {
   admin:     [['dashboard', '⊞ Dashboard'], ['enquiries', '≡ All Enquiries'], ['responses', '◈ Supplier Responses'], ['quotes', '◎ Quotes to Buyers'], ['new', '+ New Enquiry'], ['master', '◉ Master Data'], ['users', '◷ User Manager']],
-  purchaser: [['enquiries', '≡ My Enquiries'], ['new', '+ New Enquiry']],
+  purchaser: [['enquiries', '≡ My Enquiries'], ['new', '+ New Enquiry'], ['orders', '◎ My Orders']],
   supplier:  [['enquiries', '≡ Browse Enquiries'], ['responses', '◈ My Responses']],
 }
 
