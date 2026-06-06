@@ -54,7 +54,9 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
 
   const filtered = users.filter(u => {
     const matchRole   = filterRole === 'all' || u.role === filterRole
-    const matchSearch = u.email?.toLowerCase().includes(search.toLowerCase()) || u.name?.toLowerCase().includes(search.toLowerCase())
+    const matchSearch = search.trim() === '' || 
+      u.email?.toLowerCase().includes(search.toLowerCase()) || 
+      u.name?.toLowerCase().includes(search.toLowerCase())
     return matchRole && matchSearch
   })
 
@@ -127,7 +129,7 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
       </div>
 
       {/* Table */}
-      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: isDark ? C.surface : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E0DDD8'}`, borderRadius: 12, overflow: 'hidden' }}>
 
         {/* Table header */}
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1.5fr', padding: '12px 20px', borderBottom: `1px solid ${C.border}`, background: C.card }}>

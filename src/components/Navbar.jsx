@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useTheme } from '../context/ThemeContext'
 
 const roleConfig = {
   admin:     { color: '#C8A96E', bg: '#2A1F0E', label: 'Admin' },
@@ -15,6 +16,7 @@ const tabs = {
 
 export function Navbar({ tab, setTab }) {
   const { profile, signOut } = useAuth()
+  const { isDark, toggle } = useTheme()
   const [collapsed, setCollapsed] = useState(false)
   if (!profile) return null
 
@@ -145,7 +147,20 @@ export function Navbar({ tab, setTab }) {
       </nav>
 
       {/* Sign out */}
-      <div style={{ padding: collapsed ? '12px 8px' : '12px 10px', borderTop: '1px solid #1A1A1A' }}>
+      <div style={{ padding: collapsed ? '12px 8px' : '12px 10px', borderTop: '1px solid #1A1A1A', display: 'flex', flexDirection: 'column', gap: 6 }}>
+  <button onClick={toggle} style={{
+    background: 'transparent', color: '#555',
+    border: '1px solid #1E1E1E', borderRadius: 7,
+    padding: collapsed ? '10px 0' : '10px 12px',
+    cursor: 'pointer', fontSize: 12,
+    fontFamily: '"DM Mono", monospace',
+    width: '100%', display: 'flex', alignItems: 'center',
+    gap: 8, justifyContent: collapsed ? 'center' : 'flex-start',
+    transition: 'all 0.15s',
+  }}>
+    <span>{isDark ? '○' : '●'}</span>
+    {!collapsed && <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>}
+  </button>
         <button onClick={signOut} style={{
           background: 'transparent', color: '#444',
           border: '1px solid #1E1E1E', borderRadius: 7,
