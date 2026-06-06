@@ -30,6 +30,7 @@ function AllEnquiries({ setTab }) {
   const { isDark } = useTheme()
   const { enquiries, loading } = useEnquiries({ role: 'admin' })
   const { responses } = useResponses({ role: 'admin' })
+  const { quotes } = useQuotes({ role: 'admin' })
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState('all')
 
@@ -91,7 +92,7 @@ function AllEnquiries({ setTab }) {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              {['#', 'Date', 'Buyer', 'Paper Type', 'GSM', 'Coating', 'Shade', 'Qty', 'Responses', 'Status', 'Action'].map(h => (
+              {['#', 'Date', 'Buyer', 'Paper Type', 'GSM', 'Coating', 'Shade', 'Qty', 'Supplier Rate', 'Buyer Rate', 'Responses', 'Status', 'Action'].map(h => (
                 <th key={h} style={th}>{h}</th>
               ))}
             </tr>
@@ -122,6 +123,22 @@ function AllEnquiries({ setTab }) {
                   <td style={{ ...td, color: C.muted }}>{e.coating}</td>
                   <td style={{ ...td, color: C.muted }}>{e.shade}</td>
                   <td style={{ ...td, whiteSpace: 'nowrap' }}>{e.quantity?.toLocaleString()} {e.unit}</td>
+                  <td style={td}>
+                    {(() => {
+                      const resp = responses.find(r => r.enquiry_id === e.id)
+                      return resp
+                        ? <span style={{ color: C.green, fontWeight: 600, fontFamily: '"DM Mono", monospace' }}>₹{resp.price_per_kg}/kg</span>
+                        : <span style={{ color: C.muted }}>—</span>
+                    })()}
+                  </td>
+                  <td style={td}>
+                    {(() => {
+                      const quote = quotes.find(q => q.enquiry_id === e.id)
+                      return quote
+                        ? <span style={{ color: C.accent, fontWeight: 600, fontFamily: '"DM Mono", monospace' }}>₹{quote.quoted_price}/kg</span>
+                        : <span style={{ color: C.muted }}>—</span>
+                    })()}
+                  </td>
                   <td style={{ ...td, textAlign: 'center' }}>
                     <span style={{ background: count > 0 ? C.green + '22' : C.muted + '22', color: count > 0 ? C.green : C.muted, borderRadius: 4, padding: '2px 8px', fontSize: 11 }}>{count}</span>
                   </td>
