@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 import { supabase } from '../lib/supabase'
 import { C } from '../lib/constants'
 
@@ -36,15 +36,21 @@ export default function MasterPage() {
   const [editVal, setEditVal]   = useState('')
   const [saved, setSaved]       = useState(false)
 
-  // Load from localStorage for persistence
   useEffect(() => {
-    const stored = localStorage.getItem('paperlink_master')
-    if (stored) setData(JSON.parse(stored))
+    async function fetchMaster() {
+      const { data: rows } = await supabase.from('master_data').select('*')
+      if (rows && rows.length > 0) {
+        const d = {}
+        rows.forEach(r => { d[r.id] = r.items })
+        setData(prev => ({ ...prev, ...d }))
+      }
+    }
+    fetchMaster()
   }, [])
 
-  const save = (newData) => {
+  const save = async (newData) => {
     setData(newData)
-    localStorage.setItem('paperlink_master', JSON.stringify(newData))
+    await supabase.from('master_data').upsert({ id: activeTab, items: newData[activeTab], updated_at: new Date().toISOString() })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
