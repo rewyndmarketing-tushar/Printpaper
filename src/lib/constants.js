@@ -8,36 +8,27 @@ export const PAPER_TYPES = [
 ]
 
 export const COATINGS = ['Coated (C)', 'Uncoated (UC)']
-
-export const SHADES = ['Blue Tone', 'Natural', 'White', 'Cream']
-
+export const SHADES   = ['Blue Tone', 'Natural', 'White', 'Cream']
 export const GSM_OPTIONS = ['170', '200', '210', '230', '250', '270', '300', '350', '400']
-
 export const UNITS = ['sheets', 'kg', 'reams']
 
-export const ROLES = {
-  ADMIN: 'admin',
-  PURCHASER: 'purchaser',
-  SUPPLIER: 'supplier',
-}
+export const ROLES = { ADMIN: 'admin', PURCHASER: 'purchaser', SUPPLIER: 'supplier' }
+export const ENQUIRY_STATUS = { OPEN: 'open', RESPONDED: 'responded', QUOTED: 'quoted', CLOSED: 'closed' }
 
-export const ENQUIRY_STATUS = {
-  OPEN: 'open',
-  RESPONDED: 'responded',
-  QUOTED: 'quoted',
-  CLOSED: 'closed',
-}
-
-// Theme colours
+// Corporate theme
 export const C = {
-  bg: '#0F0E0C',
-  surface: '#1A1916',
-  card: '#222118',
-  border: '#333129',
-  accent: '#D4A843',
-  text: '#F0EDE4',
-  muted: '#8A8776',
-  blue: '#4A9EDB',
-  green: '#5BAD7A',
-  red: '#D45B5B',
+  bg:      '#0A0A0A',
+  surface: '#111111',
+  card:    '#141414',
+  border:  '#1E1E1E',
+  border2: '#2A2A2A',
+  accent:  '#C8A96E',
+  accentDim: '#8B6E3A',
+  text:    '#E0D8CC',
+  muted:   '#666666',
+  muted2:  '#444444',
+  blue:    '#6E9EC8',
+  green:   '#6EC89E',
+  red:     '#C86E6E',
+  amber:   '#C8A96E',
 }

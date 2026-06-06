@@ -1,17 +1,28 @@
 import { C } from '../lib/constants'
 
-const STATUS_COLOR = {
-  open:      C.blue,
-  responded: C.accent,
-  quoted:    C.green,
-  closed:    C.muted,
+const STATUS = {
+  open:      { color: C.blue,   label: 'Open' },
+  responded: { color: C.amber,  label: 'Responded' },
+  quoted:    { color: C.green,  label: 'Quoted' },
+  closed:    { color: C.muted,  label: 'Closed' },
 }
 
 export function StatusBadge({ status }) {
-  const color = STATUS_COLOR[status] || C.muted
+  const s = STATUS[status] || STATUS.open
   return (
-    <span style={{ background: color + '22', color, border: `1px solid ${color}44`, borderRadius: 4, padding: '2px 8px', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase' }}>
-      {status}
+    <span style={{
+      background: s.color + '15',
+      color: s.color,
+      border: `1px solid ${s.color}33`,
+      borderRadius: 4,
+      padding: '3px 10px',
+      fontSize: 10.5,
+      fontFamily: '"DM Mono", monospace',
+      letterSpacing: 1,
+      textTransform: 'uppercase',
+      fontWeight: 500,
+    }}>
+      {s.label}
     </span>
   )
 }
