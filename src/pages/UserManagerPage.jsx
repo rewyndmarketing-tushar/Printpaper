@@ -32,8 +32,6 @@ export default function UserManagerPage() {
   const [addModal, setAddModal]   = useState(false)
 const [newUser, setNewUser]     = useState({ name: '', email: '', password: '', role: 'purchaser' })
 const [addMsg, setAddMsg]       = useState('')
-const [theme, setTheme] = useState('dark')
-const isDark = theme === 'dark'
 const bg     = isDark ? C.surface : '#F5F3EF'
 const textC  = isDark ? C.text    : '#1A1A1A'
 const borderC = isDark ? C.border : '#E0DDD8'
@@ -42,10 +40,17 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
 
   const fetchUsers = async () => {
     setLoading(true)
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data: profileData } = await supabase
+  .from('profiles')
+  .select('*')
+  .order('created_at', { ascending: false })
+
+const { data: authData } = await supabase.auth.admin?.listUsers() || { data: null }
+
+const data = profileData?.map(p => ({
+  ...p,
+  last_sign_in: authData?.users?.find(u => u.id === p.id)?.last_sign_in_at
+}))
     setUsers(data || [])
     setLoading(false)
   }
@@ -100,9 +105,6 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
   <button onClick={() => setAddModal(true)} style={{ background: 'linear-gradient(135deg, #C8A96E, #A8893E)', color: '#0A0A0A', border: 'none', borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
     + Add User
   </button>
-  <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} style={{ background: isDark ? C.surface : '#E8E5E0', color: isDark ? C.muted : '#555', border: `1px solid ${isDark ? C.border : '#D0CCC8'}`, borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-  {isDark ? '☀ Light' : '◑ Dark'}
-</button>
 <button onClick={fetchUsers} style={{ background: isDark ? C.surface : '#E8E5E0', color: isDark ? C.muted : '#555', border: `1px solid ${isDark ? C.border : '#D0CCC8'}`, borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
   ↻ Refresh
 </button>
@@ -132,7 +134,7 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
       <div style={{ background: isDark ? C.surface : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E0DDD8'}`, borderRadius: 12, overflow: 'hidden' }}>
 
         {/* Table header */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1.5fr', padding: '12px 20px', borderBottom: `1px solid ${C.border}`, background: C.card }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1.5fr', padding: '12px 20px', borderBottom: `1px solid ${isDark ? C.border : '#E0DDD8'}`, background: isDark ? C.card : '#F5F3EF' }}>
           {['User', 'Role', 'Joined', 'Status', 'Actions'].map(h => (
             <div key={h} style={{ fontSize: 10.5, color: C.muted, fontFamily: '"DM Mono", monospace', letterSpacing: 1, textTransform: 'uppercase' }}>{h}</div>
           ))}
@@ -158,7 +160,7 @@ const cardBg  = isDark ? C.card   : '#FFFFFF'
             >
               {/* User */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: isBanned ? C.red : C.green, flexShrink: 0 }} />
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: isBanned ? C.red : u.last_sign_in && (Date.now() - new Date(u.last_sign_in).getTime()) < 3600000 ? '#44DD88' : C.muted, flexShrink: 0 }} title={u.last_sign_in ? `Last seen: ${timeAgo(u.last_sign_in)}` : 'Never logged in'} />
                 <div>
                   <div style={{ color: C.text, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>{u.email}</div>
                   <div style={{ color: C.muted, fontSize: 11, fontFamily: '"DM Mono", monospace', marginTop: 2 }}>{u.name}</div>
