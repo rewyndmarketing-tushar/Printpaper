@@ -6,6 +6,7 @@ import { useResponses, useQuotes } from '../hooks/useResponses'
 import { EnquiryForm } from '../components/EnquiryForm'
 import { C, PAPER_TYPES, COATINGS, SHADES, GSM_OPTIONS } from '../lib/constants'
 import { supabase } from '../lib/supabase'
+import { NegotiationPanel } from '../components/NegotiationPanel'
 import MasterPage from './MasterPage'
 import UserManagerPage from './UserManagerPage'
 import DashboardPage from './DashboardPage'
@@ -267,6 +268,8 @@ function SupplierResponses() {
               </div>
             </div>
 
+            <NegotiationPanel enquiry={enq} responses={[resp]} isDark={isDark} onStatusChange={refetch} />
+
             {!alreadyQuoted ? (
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', paddingTop: 12, borderTop: `1px solid ${isDark ? C.border : '#E8E5E0'}` }}>
                 <div style={{ flex: 1 }}>
@@ -341,8 +344,10 @@ function QuotesSent() {
                   Supplier @ ₹{q.supplier_price}/kg
                 </div>
                 {q.message && <div style={{ fontSize: 12, color: C.muted, fontFamily: '"DM Mono", monospace', marginTop: 4 }}>{q.message}</div>}
+                
                 <div style={{ fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace', marginTop: 6 }}>Sent {new Date(q.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-              </div>
+                <NegotiationPanel enquiry={q.enquiries} responses={[]} isDark={isDark} onStatusChange={refetch} />
+        </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontFamily: '"Playfair Display", serif', color: C.accent, fontSize: 22 }}>₹{q.quoted_price}<span style={{ fontSize: 13 }}>/kg</span></div>
                 <div style={{ fontSize: 11, color: C.green, marginTop: 2, fontFamily: '"DM Mono", monospace' }}>+₹{margin}/kg margin</div>

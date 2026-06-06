@@ -5,6 +5,7 @@ import { useEnquiries } from '../hooks/useEnquiries'
 import { useQuotes } from '../hooks/useResponses'
 import { useOrders } from '../hooks/useOrders'
 import { EnquiryForm } from '../components/EnquiryForm'
+import { NegotiationPanel } from '../components/NegotiationPanel'
 import { C } from '../lib/constants'
 
 const statusColor = { open: '#6E9EC8', responded: '#C8A96E', quoted: '#6EC89E', closed: '#666' }
@@ -229,6 +230,16 @@ export default function PurchaserPage({ tab, setTab }) {
         </table>
       </div>
       <div style={{ marginTop: 10, fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace' }}>Showing {enquiries.length} enquiries</div>
+
+      {/* Negotiation panels for quoted/responded enquiries */}
+      {enquiries.filter(e => e.status === 'quoted' || e.status === 'responded').map(e => (
+        <div key={`neg-${e.id}`} style={{ marginTop: 12 }}>
+          <div style={{ fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace', marginBottom: 4, padding: '0 4px' }}>
+            ◈ Negotiation — <span style={{ color: isDark ? C.text : '#1A1A1A' }}>{e.paper_type} · {e.quantity?.toLocaleString()} {e.unit}</span>
+          </div>
+          <NegotiationPanel enquiry={e} responses={[]} isDark={isDark} />
+        </div>
+      ))}
     </div>
   )
 }
