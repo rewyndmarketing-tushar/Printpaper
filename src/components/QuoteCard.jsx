@@ -9,11 +9,14 @@ export function QuoteCard({ quote }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <div style={{ fontSize: 14, color: C.text, marginBottom: 4 }}>
-            {enquiries?.quantity} {enquiries?.unit} · {enquiries?.paper_type}
-          </div>
-          <div style={{ fontSize: 12, color: C.muted }}>
-            Supplier: {supplier_responses?.profiles?.name} @ ₹{supplier_price}/kg
-          </div>
+          {enquiries?.quantity} {enquiries?.unit} · {enquiries?.paper_type}
+        </div>
+        <div style={{ fontSize: 12, color: C.muted, marginBottom: 3 }}>
+          Sent to: <span style={{ color: C.blue }}>{enquiries?.profiles?.name || 'Buyer'}</span>
+        </div>
+        <div style={{ fontSize: 12, color: C.muted }}>
+          Supplier: {supplier_responses?.profiles?.name} @ ₹{supplier_price}/kg
+        </div>
           {message && <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>{message}</div>}
         </div>
         <div style={{ textAlign: 'right' }}>
