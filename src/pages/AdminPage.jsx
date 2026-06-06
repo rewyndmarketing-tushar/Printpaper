@@ -82,7 +82,8 @@ function AllEnquiries({ setTab }) {
     const matchSearch = search.trim() === '' ||
       e.paper_type?.toLowerCase().includes(search.toLowerCase()) ||
       e.profiles?.name?.toLowerCase().includes(search.toLowerCase())
-    return matchStatus && matchSearch
+    const notClosed = e.status !== 'closed'
+    return matchStatus && matchSearch && notClosed
   })
 
   const stats = [
