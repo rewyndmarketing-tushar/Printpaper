@@ -29,7 +29,7 @@ function ProtectedApp() {
     <div style={{ display: 'flex', minHeight: '100vh', background: isDark ? '#0A0A0A' : '#F0EDE8' }}>
       <Navbar tab={tab} setTab={setTab} />
       {/* Main content — offset by sidebar width */}
-      <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', transition: 'margin-left 0.25s ease' }}>
+      <div style={{ marginLeft: 220, flex: 1, minHeight: '100vh', transition: 'margin-left 0.25s ease', maxWidth: 'calc(100vw - 220px)' }}>
         {Page ? <Page tab={tab} setTab={setTab} /> : <div style={{ padding: 24, color: '#C86E6E' }}>Unknown role: {profile.role}</div>}
       </div>
     </div>

@@ -11,7 +11,7 @@ import MasterPage from './MasterPage'
 import UserManagerPage from './UserManagerPage'
 import { C } from '../lib/constants'
 
-const section = { padding: '32px 36px', maxWidth: 900, minHeight: '100vh' }
+const section = { padding: '28px 32px', minHeight: '100vh' }
 
 const SectionTitle = ({ title, subtitle }) => (
   <div style={{ marginBottom: 24 }}>
