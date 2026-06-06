@@ -80,10 +80,10 @@ export default function DashboardPage({ setTab }) {
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>{['Date', 'Buyer', 'Paper Type', 'GSM', 'Qty', 'Supplier Rate', 'Buyer Rate', 'Status'].map(h => <th key={h} style={th}>{h}</th>)}</tr>
+            <tr>{['Date', 'Buyer', 'Paper Type', 'GSM', 'Qty', 'Supplier Rate', 'Buyer Rate', 'Status', 'Action'].map(h => <th key={h} style={th}>{h}</th>)}</tr>
           </thead>
           <tbody>
-            {enquiries.slice(0, 10).map(e => {
+            {enquiries.filter(e => e.status !== 'closed').slice(0, 10).map(e => {
               const sc = { open: '#6E9EC8', responded: '#C8A96E', quoted: '#6EC89E', closed: '#666' }[e.status] || '#666'
               const quote = quotes.find(q => q.enquiry_id === e.id)
               return (
