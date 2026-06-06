@@ -8,9 +8,9 @@ const roleConfig = {
 }
 
 const tabs = {
-  admin:     [['enquiries', '📋 All Enquiries'], ['responses', '💬 Supplier Responses'], ['quotes', '📤 Quotes to Buyers'], ['new', '➕ New Enquiry'], ['master', '⚙️ Master Data'], ['users', '👥 User Manager']],
-  purchaser: [['enquiries', '📋 My Enquiries'], ['new', '➕ New Enquiry'], ['master', '⚙️ Master Data'], ['users', '👥 User Manager']],
-  supplier:  [['enquiries', '📋 Browse Enquiries'], ['responses', '💬 My Responses']],
+  admin:     [['enquiries', '≡ All Enquiries'], ['responses', '◈ Supplier Responses'], ['quotes', '◎ Quotes to Buyers'], ['new', '+ New Enquiry'], ['master', '◉ Master Data'], ['users', '◷ User Manager']],
+  purchaser: [['enquiries', '≡ My Enquiries'], ['new', '+ New Enquiry']],
+  supplier:  [['enquiries', '≡ Browse Enquiries'], ['responses', '◈ My Responses']],
 }
 
 export function Navbar({ tab, setTab }) {
@@ -159,7 +159,7 @@ export function Navbar({ tab, setTab }) {
         onMouseEnter={e => { e.currentTarget.style.color = '#C86E6E'; e.currentTarget.style.borderColor = '#C86E6E44' }}
         onMouseLeave={e => { e.currentTarget.style.color = '#444'; e.currentTarget.style.borderColor = '#1E1E1E' }}
         >
-          <span>🚪</span>
+          <span>→</span>
           {!collapsed && <span>Sign out</span>}
         </button>
       </div>

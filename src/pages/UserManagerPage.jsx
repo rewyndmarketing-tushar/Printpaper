@@ -32,6 +32,13 @@ export default function UserManagerPage() {
   const [addModal, setAddModal]   = useState(false)
 const [newUser, setNewUser]     = useState({ name: '', email: '', password: '', role: 'purchaser' })
 const [addMsg, setAddMsg]       = useState('')
+const [theme, setTheme] = useState('dark')
+const isDark = theme === 'dark'
+const bg     = isDark ? C.surface : '#F5F3EF'
+const textC  = isDark ? C.text    : '#1A1A1A'
+const borderC = isDark ? C.border : '#E0DDD8'
+const mutedC  = isDark ? C.muted  : '#888'
+const cardBg  = isDark ? C.card   : '#FFFFFF'
 
   const fetchUsers = async () => {
     setLoading(true)
@@ -78,7 +85,7 @@ const [addMsg, setAddMsg]       = useState('')
   const inp = { background: '#0F0F0F', border: `1px solid #2A2A2A`, borderRadius: 6, padding: '9px 14px', color: C.text, fontSize: 13, fontFamily: '"DM Mono", monospace', outline: 'none' }
 
   return (
-    <div style={{ padding: '32px 36px', maxWidth: 1000 }}>
+    <div style={{ padding: '32px 36px', maxWidth: 1000, color: textC }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -91,9 +98,12 @@ const [addMsg, setAddMsg]       = useState('')
   <button onClick={() => setAddModal(true)} style={{ background: 'linear-gradient(135deg, #C8A96E, #A8893E)', color: '#0A0A0A', border: 'none', borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
     + Add User
   </button>
-  <button onClick={fetchUsers} style={{ background: C.surface, color: C.muted, border: `1px solid ${C.border}`, borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
-    ↻ Refresh
-  </button>
+  <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} style={{ background: isDark ? C.surface : '#E8E5E0', color: isDark ? C.muted : '#555', border: `1px solid ${isDark ? C.border : '#D0CCC8'}`, borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
+  {isDark ? '☀ Light' : '◑ Dark'}
+</button>
+<button onClick={fetchUsers} style={{ background: isDark ? C.surface : '#E8E5E0', color: isDark ? C.muted : '#555', border: `1px solid ${isDark ? C.border : '#D0CCC8'}`, borderRadius: 8, padding: '9px 16px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', display: 'flex', alignItems: 'center', gap: 6 }}>
+  ↻ Refresh
+</button>
 </div>
       </div>
 
