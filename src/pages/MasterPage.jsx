@@ -3,10 +3,10 @@ import { supabase } from '../lib/supabase'
 import { C } from '../lib/constants'
 
 const CATEGORIES = [
-  { key: 'paper_types', label: 'Paper Types', icon: '📄', color: '#6E9EC8' },
-  { key: 'shades',      label: 'Shades',      icon: '🎨', color: '#C86E9E' },
-  { key: 'gsm',         label: 'GSM Options', icon: '⚖️',  color: '#6EC89E' },
-  { key: 'coatings',    label: 'Coatings',    icon: '✨', color: '#C8A96E' },
+  { key: 'paper_types', label: 'Paper Types', icon: '▤', color: '#6E9EC8' },
+  { key: 'shades',      label: 'Shades',      icon: '◐', color: '#C86E9E' },
+  { key: 'gsm',         label: 'GSM Options', icon: '≋', color: '#6EC89E' },
+  { key: 'coatings',    label: 'Coatings',    icon: '◫', color: '#C8A96E' },
 ]
 
 const DEFAULT_DATA = {
