@@ -44,16 +44,36 @@ function ResponseForm({ onSubmit, onCancel, loading }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
         <div>
           <label style={lbl}>Mill</label>
-          <select style={inp} value={mill} onChange={e => setMill(e.target.value)}>
+          <select style={inp} value={mill} onChange={e => {
+            if (e.target.value === '__add__') {
+              const newMill = prompt('Enter new mill:')
+              if (newMill?.trim()) {
+                setMills(prev => [...prev, newMill.trim()])
+                setMill(newMill.trim())
+                supabase.from('master_data').upsert({ id: 'mills', items: [...mills, newMill.trim()] })
+              }
+            } else setMill(e.target.value)
+          }}>
             <option value="">— Select Mill —</option>
             {mills.map(m => <option key={m}>{m}</option>)}
+            <option value="__add__">+ Add new mill…</option>
           </select>
         </div>
         <div>
           <label style={lbl}>Grade</label>
-          <select style={inp} value={grade} onChange={e => setGrade(e.target.value)}>
+          <select style={inp} value={grade} onChange={e => {
+            if (e.target.value === '__add__') {
+              const newGrade = prompt('Enter new grade:')
+              if (newGrade?.trim()) {
+                setGrades(prev => [...prev, newGrade.trim()])
+                setGrade(newGrade.trim())
+                supabase.from('master_data').upsert({ id: 'grades', items: [...grades, newGrade.trim()] })
+              }
+            } else setGrade(e.target.value)
+          }}>
             <option value="">— Select Grade —</option>
             {grades.map(g => <option key={g}>{g}</option>)}
+            <option value="__add__">+ Add new grade…</option>
           </select>
         </div>
       </div>
