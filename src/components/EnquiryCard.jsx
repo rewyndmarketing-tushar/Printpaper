@@ -2,7 +2,7 @@ import { StatusBadge } from './StatusBadge'
 import { C } from '../lib/constants'
 import { useTheme } from '../context/ThemeContext'
 
-export function EnquiryCard({ enquiry, footer, responseCount }) {
+export function EnquiryCard({ enquiry, footer, responseCount, hideProfile }) {
   const { isDark } = useTheme()
   const { paper_type, gsm, coating, shade, quantity, unit, notes, status, created_at, profiles } = enquiry
 
@@ -40,7 +40,7 @@ export function EnquiryCard({ enquiry, footer, responseCount }) {
           { label: 'Coating', value: coating },
           { label: 'Shade', value: shade },
           { label: 'Quantity', value: `${quantity?.toLocaleString()} ${unit}` },
-          { label: 'Buyer', value: profiles?.name || '—' },
+          ...(!hideProfile ? [{ label: 'Buyer', value: profiles?.name || '—' }] : []),
           { label: 'Date', value: new Date(created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) },
           { label: 'Notes', value: notes || '—' },
         ].map(d => (
