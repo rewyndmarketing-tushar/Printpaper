@@ -31,10 +31,10 @@ export function useResponses({ role, userId } = {}) {
     return () => supabase.removeChannel(channel)
   }, [role, userId])
 
-  async function createResponse({ enquiryId, pricePerKg, location, note }) {
+  async function createResponse({ enquiryId, pricePerKg, location, mill, grade, note }) {
     const { data, error } = await supabase
       .from('supplier_responses')
-      .insert({ enquiry_id: enquiryId, supplier_id: userId, price_per_kg: pricePerKg, location, note })
+      .insert({ enquiry_id: enquiryId, supplier_id: userId, price_per_kg: pricePerKg, location, mill, grade, note })
       .select()
       .single()
     if (error) throw error

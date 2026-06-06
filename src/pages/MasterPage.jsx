@@ -7,13 +7,17 @@ const CATEGORIES = [
   { key: 'shades',      label: 'Shades',      icon: '◐', color: '#C86E9E' },
   { key: 'gsm',         label: 'GSM Options', icon: '≋', color: '#6EC89E' },
   { key: 'coatings',    label: 'Coatings',    icon: '◫', color: '#C8A96E' },
+  { key: 'mills',       label: 'Mills',       icon: '◈', color: '#9E6EC8' },
+  { key: 'grades',      label: 'Grades',      icon: '◆', color: '#C8756E' },
 ]
 
 const DEFAULT_DATA = {
-  paper_types: ['Duplex GB (Grey Back)', 'Duplex WB (White Back)', 'Sapphire', 'SBS', 'Art Paper', 'Maplito'],
-  shades:      ['Blue Tone', 'Natural', 'White', 'Cream'],
-  gsm:         ['170', '200', '210', '230', '250', '270', '300', '350', '400'],
-  coatings:    ['Coated (C)', 'Uncoated (UC)'],
+  paper_types:  ['Duplex GB (Grey Back)', 'Duplex WB (White Back)', 'Sapphire', 'SBS', 'Art Paper', 'Maplito', 'Butter Paper'],
+  shades:       ['Blue Tone', 'Natural', 'White', 'Cream'],
+  gsm:          ['170', '200', '210', '230', '250', '270', '300', '350', '400'],
+  coatings:     ['Coated (C)', 'Uncoated (UC)'],
+  mills:        ['JK Paper', 'BILT', 'ITC', 'Century', 'Seshasayee', 'Tamil Nadu', 'Emami', 'Shreyans'],
+  grades:       ['A Grade', 'B Grade', 'C Grade', 'Premium', 'Standard', 'Economy'],
 }
 
 const inp = {

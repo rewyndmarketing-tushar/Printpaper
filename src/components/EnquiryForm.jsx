@@ -11,7 +11,7 @@ const s = {
 export function EnquiryForm({ onSubmit, loading }) {
   const [form, setForm] = useState({
     paperType: PAPER_TYPES[0], gsm: '230', coating: COATINGS[0],
-    shade: SHADES[0], quantity: '', unit: 'sheets', notes: '',
+    shade: SHADES[0], quantity: '', unit: 'sheets', sheetSize: '', grainSpec: '', notes: '',
   })
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
@@ -60,6 +60,14 @@ export function EnquiryForm({ onSubmit, loading }) {
           </select>
         </div>
       </div>
+      <div style={{ marginBottom: 14 }}>
+          <label style={s.label}>Sheet Size</label>
+          <input style={s.input} value={form.sheetSize} onChange={set('sheetSize')} placeholder="e.g. 22x30, 25x38" />
+        </div>
+        <div style={{ marginBottom: 14 }}>
+          <label style={s.label}>Grain Spec</label>
+          <input style={s.input} value={form.grainSpec} onChange={set('grainSpec')} placeholder="e.g. Grain Long (GL)" />
+        </div>
 
       <div style={{ marginBottom: 14 }}>
         <label style={s.label}>Notes (optional)</label>

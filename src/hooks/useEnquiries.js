@@ -48,6 +48,8 @@ export function useEnquiries({ role, userId } = {}) {
         shade:        form.shade,
         quantity:     Number(form.quantity),
         unit:         form.unit,
+        sheet_size:   form.sheetSize,
+        grain_spec:   form.grainSpec,
         notes:        form.notes,
         status:       'open',
       })

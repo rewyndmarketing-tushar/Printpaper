@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { supabase } from '../lib/supabase'
 import { useTheme } from '../context/ThemeContext'
 import { useEnquiries } from '../hooks/useEnquiries'
 import { useResponses } from '../hooks/useResponses'
@@ -12,20 +13,49 @@ const lbl = { fontSize: 11, color: C.muted, letterSpacing: 1, textTransform: 'up
 function ResponseForm({ onSubmit, onCancel, loading }) {
   const [price, setPrice]       = useState('')
   const [location, setLocation] = useState('')
+  const [mill, setMill]         = useState('')
+  const [grade, setGrade]       = useState('')
   const [note, setNote]         = useState('')
+  const [mills, setMills]       = useState([])
+  const [grades, setGrades]     = useState([])
+
+  useEffect(() => {
+    supabase.from('master_data').select('*').in('id', ['mills', 'grades']).then(({ data }) => {
+      if (data) {
+        setMills(data.find(d => d.id === 'mills')?.items || [])
+        setGrades(data.find(d => d.id === 'grades')?.items || [])
+      }
+    })
+  }, [])
 
   const submit = (e) => {
     e.preventDefault()
     if (!price || !location) return
-    onSubmit({ pricePerKg: parseFloat(price), location, note })
+    onSubmit({ pricePerKg: parseFloat(price), location, mill, grade, note })
   }
 
   return (
     <form onSubmit={submit}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 10 }}>
         <div><label style={lbl}>Your Price (₹/kg)</label><input style={inp} type="number" min="1" value={price} onChange={e => setPrice(e.target.value)} placeholder="e.g. 900" required /></div>
         <div><label style={lbl}>Your Location</label><input style={inp} value={location} onChange={e => setLocation(e.target.value)} placeholder="e.g. Andheri, Mumbai" required /></div>
         <div><label style={lbl}>Notes</label><input style={inp} value={note} onChange={e => setNote(e.target.value)} placeholder="Delivery time, stock…" /></div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+        <div>
+          <label style={lbl}>Mill</label>
+          <select style={inp} value={mill} onChange={e => setMill(e.target.value)}>
+            <option value="">— Select Mill —</option>
+            {mills.map(m => <option key={m}>{m}</option>)}
+          </select>
+        </div>
+        <div>
+          <label style={lbl}>Grade</label>
+          <select style={inp} value={grade} onChange={e => setGrade(e.target.value)}>
+            <option value="">— Select Grade —</option>
+            {grades.map(g => <option key={g}>{g}</option>)}
+          </select>
+        </div>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         <button type="submit" disabled={loading} style={{ background: C.accent, color: '#0F0E0C', border: 'none', borderRadius: 5, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontFamily: 'inherit', fontWeight: 600 }}>
