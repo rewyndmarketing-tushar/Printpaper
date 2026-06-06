@@ -37,7 +37,11 @@ export function useOrders({ userId, role } = {}) {
       .select().single()
     if (error) throw error
     // Update enquiry status to closed
-    await supabase.from('enquiries').update({ status: 'closed' }).eq('id', enquiryId)
+    const { error: updateError } = await supabase
+      .from('enquiries')
+      .update({ status: 'closed' })
+      .eq('id', enquiryId)
+    if (updateError) console.error('Status update error:', updateError)
     await fetchOrders()
     return data
   }
