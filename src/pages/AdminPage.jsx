@@ -8,6 +8,7 @@ import { EnquiryForm } from '../components/EnquiryForm'
 import { ResponseCard } from '../components/ResponseCard'
 import { QuoteCard } from '../components/QuoteCard'
 import MasterPage from './MasterPage'
+import DashboardPage from './DashboardPage'
 import UserManagerPage from './UserManagerPage'
 import { C } from '../lib/constants'
 
@@ -290,6 +291,7 @@ function AdminNewEnquiry({ setTab }) {
 // ── Main AdminPage ────────────────────────────────────────────────────
 export default function AdminPage({ tab, setTab }) {
   if (tab === 'responses') return <SupplierResponses />
+  if (tab === 'dashboard')  return <DashboardPage setTab={setTab} />
   if (tab === 'quotes')    return <QuotesSent />
   if (tab === 'new')       return <AdminNewEnquiry setTab={setTab} />
   if (tab === 'master')    return <MasterPage />

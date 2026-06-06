@@ -13,7 +13,7 @@ import AdminPage     from './pages/AdminPage'
 function ProtectedApp() {
   const { isDark } = useTheme()
   const { user, profile, loading } = useAuth()
-  const [tab, setTab] = useState('enquiries')
+  const [tab, setTab] = useState(profile?.role === 'admin' ? 'dashboard' : 'enquiries')
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: '#0A0A0A', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#444', fontSize: 13, fontFamily: '"DM Mono", monospace' }}>
