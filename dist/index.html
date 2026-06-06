@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PaperLink — Paper Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: #0A0A0A;
+        color: #E0D8CC;
+        font-family: 'Lato', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root { min-height: 100vh; }
+
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #0A0A0A; }
+      ::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #3A3A3A; }
+
+      ::selection { background: #C8A96E33; color: #C8A96E; }
+
+      input, select, textarea, button {
+        font-family: inherit;
+      }
+
+      /* Subtle grid background */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      #root { position: relative; z-index: 1; }
+    </style>
+    <script type="module" crossorigin src="/assets/index-ChBQJ3I6.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
