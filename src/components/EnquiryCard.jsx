@@ -1,17 +1,24 @@
 import { StatusBadge } from './StatusBadge'
 import { C } from '../lib/constants'
+import { useTheme } from '../context/ThemeContext'
 
-export function EnquiryCard({ enquiry, footer }) {
+export function EnquiryCard({ enquiry, footer, responseCount }) {
+  const { isDark } = useTheme()
   const { paper_type, gsm, coating, shade, quantity, unit, notes, status, created_at, profiles } = enquiry
 
   return (
     <div style={{
-      background: C.surface,
-      border: `1px solid ${C.border}`,
+      background: isDark ? C.surface : '#FFFFFF',
+      border: `1px solid ${isDark ? C.border : '#E8E5E0'}`,
       borderRadius: 10,
-      padding: '20px 24px',
-      marginBottom: 12,
-      transition: 'border-color 0.2s',
+      padding: '16px 20px',
+      marginBottom: 10,
+      borderLeft: `3px solid ${
+        enquiry.status === 'open' ? '#6E9EC8' :
+        enquiry.status === 'responded' ? '#C8A96E' :
+        enquiry.status === 'quoted' ? '#6EC89E' : '#444'
+      }`,
+      transition: 'all 0.2s',
     }}
     onMouseEnter={e => e.currentTarget.style.borderColor = '#2A2A2A'}
     onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
@@ -38,8 +45,8 @@ export function EnquiryCard({ enquiry, footer }) {
 
       {notes && (
         <div style={{
-          background: C.bg,
-          border: `1px solid ${C.border}`,
+          background: isDark ? C.bg : '#F5F3EF',
+          border: `1px solid ${isDark ? C.border : '#E0DDD8'}`,
           borderRadius: 6,
           padding: '8px 12px',
           fontSize: 12,
@@ -51,8 +58,15 @@ export function EnquiryCard({ enquiry, footer }) {
         </div>
       )}
 
-      <div style={{ fontSize: 11, color: C.muted2, fontFamily: '"DM Mono", monospace', marginBottom: footer ? 14 : 0 }}>
-        {new Date(created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+      <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: footer ? 14 : 0 }}>
+        <span style={{ fontSize: 11, color: C.muted2, fontFamily: '"DM Mono", monospace' }}>
+          {new Date(created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+        </span>
+        {responseCount !== undefined && (
+          <span style={{ fontSize: 11, color: C.muted2, fontFamily: '"DM Mono", monospace' }}>
+            {responseCount} response{responseCount !== 1 ? 's' : ''}
+          </span>
+        )}
       </div>
 
       {footer && (

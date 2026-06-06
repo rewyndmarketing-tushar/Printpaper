@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useTheme } from '../context/ThemeContext'
 import { useEnquiries } from '../hooks/useEnquiries'
 import { useResponses, useQuotes } from '../hooks/useResponses'
 import { EnquiryCard } from '../components/EnquiryCard'
@@ -10,7 +11,7 @@ import MasterPage from './MasterPage'
 import UserManagerPage from './UserManagerPage'
 import { C } from '../lib/constants'
 
-const section = { padding: '32px 36px', maxWidth: 900 }
+const section = { padding: '32px 36px', maxWidth: 900, minHeight: '100vh' }
 
 const SectionTitle = ({ title, subtitle }) => (
   <div style={{ marginBottom: 24 }}>
@@ -24,24 +25,67 @@ const SectionTitle = ({ title, subtitle }) => (
 )
 
 // ── All Enquiries ─────────────────────────────────────────────────────
-function AllEnquiries() {
+function AllEnquiries({ setTab }) {
+  const { isDark } = useTheme()
   const { enquiries, loading } = useEnquiries({ role: 'admin' })
   const { responses } = useResponses({ role: 'admin' })
+  const [search, setSearch] = useState('')
+  const [filterStatus, setFilterStatus] = useState('all')
+
+  const filtered = enquiries.filter(e => {
+    const matchStatus = filterStatus === 'all' || e.status === filterStatus
+    const matchSearch = search.trim() === '' ||
+      e.paper_type?.toLowerCase().includes(search.toLowerCase()) ||
+      e.profiles?.name?.toLowerCase().includes(search.toLowerCase())
+    return matchStatus && matchSearch
+  })
+
+  const stats = [
+    { label: 'Open',      value: enquiries.filter(e => e.status === 'open').length,      color: '#6E9EC8' },
+    { label: 'Responded', value: enquiries.filter(e => e.status === 'responded').length,  color: '#C8A96E' },
+    { label: 'Quoted',    value: enquiries.filter(e => e.status === 'quoted').length,     color: '#6EC89E' },
+    { label: 'Total',     value: enquiries.length,                                         color: isDark ? C.text : '#1A1A1A' },
+  ]
 
   return (
     <div style={section}>
-      <SectionTitle title="All Enquiries" subtitle="Admin · Overview" />
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+        <SectionTitle title="All Enquiries" subtitle="Admin · Overview" />
+        <button onClick={() => setTab('new')} style={{ background: 'linear-gradient(135deg, #C8A96E, #A8893E)', color: '#0A0A0A', border: 'none', borderRadius: 7, padding: '9px 18px', cursor: 'pointer', fontSize: 12, fontFamily: '"DM Mono", monospace', fontWeight: 700, boxShadow: '0 4px 12px #C8A96E33' }}>
+          + New Enquiry
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 20 }}>
+        {stats.map(s => (
+          <div key={s.label} onClick={() => setFilterStatus(s.label.toLowerCase() === 'total' ? 'all' : s.label.toLowerCase())}
+            style={{ background: isDark ? C.surface : '#FFFFFF', border: `1px solid ${filterStatus === (s.label.toLowerCase() === 'total' ? 'all' : s.label.toLowerCase()) ? s.color + '66' : isDark ? C.border : '#E8E5E0'}`, borderRadius: 10, padding: '14px 16px', cursor: 'pointer', transition: 'all 0.15s' }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: s.color, fontFamily: '"Playfair Display", serif' }}>{s.value}</div>
+            <div style={{ fontSize: 10, color: C.muted, fontFamily: '"DM Mono", monospace', letterSpacing: 1, textTransform: 'uppercase', marginTop: 2 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Search + filter */}
+      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+        <input
+          placeholder="Search by paper type or buyer..."
+          value={search} onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1, background: isDark ? C.card : '#FFFFFF', border: `1px solid ${isDark ? C.border : '#E8E5E0'}`, borderRadius: 7, padding: '9px 14px', color: isDark ? C.text : '#1A1A1A', fontSize: 12, fontFamily: '"DM Mono", monospace', outline: 'none' }}
+        />
+        {['all', 'open', 'responded', 'quoted', 'closed'].map(s => (
+          <button key={s} onClick={() => setFilterStatus(s)} style={{ background: filterStatus === s ? '#C8A96E18' : 'transparent', color: filterStatus === s ? '#C8A96E' : C.muted, border: `1px solid ${filterStatus === s ? '#C8A96E44' : isDark ? C.border : '#E8E5E0'}`, borderRadius: 6, padding: '8px 12px', cursor: 'pointer', fontSize: 11, fontFamily: '"DM Mono", monospace', textTransform: 'capitalize' }}>
+            {s}
+          </button>
+        ))}
+      </div>
+
       {loading && <div style={{ color: C.muted, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>Loading…</div>}
-      {!loading && enquiries.length === 0 && <div style={{ color: C.muted, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>No enquiries yet.</div>}
-      {enquiries.map((enq) => {
+      {!loading && filtered.length === 0 && <div style={{ color: C.muted, fontSize: 13, fontFamily: '"DM Mono", monospace' }}>No enquiries found.</div>}
+      {filtered.map((enq) => {
         const count = responses.filter((r) => r.enquiry_id === enq.id).length
-        return (
-          <EnquiryCard key={enq.id} enquiry={enq} footer={
-            <span style={{ fontSize: 11, color: C.muted, fontFamily: '"DM Mono", monospace' }}>
-              {count} supplier response{count !== 1 ? 's' : ''}
-            </span>
-          } />
-        )
+        return <EnquiryCard key={enq.id} enquiry={enq} responseCount={count} />
       })}
     </div>
   )
@@ -192,5 +236,5 @@ export default function AdminPage({ tab, setTab }) {
   if (tab === 'new')       return <AdminNewEnquiry setTab={setTab} />
   if (tab === 'master')    return <MasterPage />
   if (tab === 'users')     return <UserManagerPage />
-  return <AllEnquiries />
+  return <AllEnquiries setTab={setTab} />
 }

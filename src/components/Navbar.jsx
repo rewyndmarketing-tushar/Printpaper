@@ -27,8 +27,8 @@ export function Navbar({ tab, setTab }) {
     <div style={{
       width: collapsed ? 60 : 220,
       minHeight: '100vh',
-      background: '#0D0D0D',
-      borderRight: '1px solid #1A1A1A',
+      background: isDark ? '#0D0D0D' : '#FFFFFF',
+borderRight: `1px solid ${isDark ? '#1A1A1A' : '#E0DDD8'}`,
       display: 'flex',
       flexDirection: 'column',
       position: 'fixed',
@@ -41,7 +41,7 @@ export function Navbar({ tab, setTab }) {
       {/* Logo */}
       <div style={{
         padding: collapsed ? '20px 0' : '20px 20px',
-        borderBottom: '1px solid #1A1A1A',
+        borderBottom: `1px solid ${isDark ? '#1A1A1A' : '#E0DDD8'}`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: collapsed ? 'center' : 'space-between',
@@ -61,7 +61,7 @@ export function Navbar({ tab, setTab }) {
             <span style={{
               fontFamily: 'Georgia, serif',
               fontSize: 16, fontWeight: 700,
-              color: '#E8E0D0', letterSpacing: 0.5,
+              color: isDark ? '#E8E0D0' : '#1A1A1A', letterSpacing: 0.5,
               whiteSpace: 'nowrap',
             }}>PaperLink</span>
           )}
@@ -84,7 +84,7 @@ export function Navbar({ tab, setTab }) {
 
       {/* Role badge */}
       {!collapsed && (
-        <div style={{ padding: '12px 16px', borderBottom: '1px solid #1A1A1A' }}>
+        <div style={{ padding: '12px 16px', borderBottom: `1px solid ${isDark ? '#1A1A1A' : '#E0DDD8'}` }}>
           <div style={{
             background: rc.bg,
             border: `1px solid ${rc.color}33`,
@@ -108,7 +108,7 @@ export function Navbar({ tab, setTab }) {
       {/* Nav items */}
       <nav style={{ flex: 1, padding: collapsed ? '12px 8px' : '12px 10px', display: 'flex', flexDirection: 'column', gap: 2 }}>
         {!collapsed && (
-          <div style={{ color: '#333', fontSize: 10, fontFamily: '"DM Mono", monospace', letterSpacing: 1.5, textTransform: 'uppercase', padding: '4px 8px', marginBottom: 4 }}>
+          <div style={{ color: isDark ? '#333' : '#AAA', fontSize: 10, fontFamily: '"DM Mono", monospace', letterSpacing: 1.5, textTransform: 'uppercase', padding: '4px 8px', marginBottom: 4 }}>
             Menu
           </div>
         )}
@@ -119,7 +119,7 @@ export function Navbar({ tab, setTab }) {
           return (
             <button key={key} onClick={() => setTab(key)} style={{
               background: isActive ? '#C8A96E18' : 'transparent',
-              color: isActive ? '#C8A96E' : '#555',
+              color: isActive ? '#C8A96E' : isDark ? '#555' : '#888',
               border: `1px solid ${isActive ? '#C8A96E33' : 'transparent'}`,
               borderRadius: 7,
               padding: collapsed ? '10px 0' : '10px 12px',
@@ -136,8 +136,8 @@ export function Navbar({ tab, setTab }) {
               whiteSpace: 'nowrap',
               justifyContent: collapsed ? 'center' : 'flex-start',
             }}
-            onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = '#1A1A1A'; e.currentTarget.style.color = '#888' }}}
-            onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#555' }}}
+            onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = isDark ? '#1A1A1A' : '#F5F3EF'; e.currentTarget.style.color = '#888' }}}
+onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = isDark ? '#555' : '#888' }}}
             >
               <span style={{ fontSize: 15 }}>{icon}</span>
               {!collapsed && <span>{text}</span>}
@@ -147,10 +147,10 @@ export function Navbar({ tab, setTab }) {
       </nav>
 
       {/* Sign out */}
-      <div style={{ padding: collapsed ? '12px 8px' : '12px 10px', borderTop: '1px solid #1A1A1A', display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ padding: collapsed ? '12px 8px' : '12px 10px', borderTop: `1px solid ${isDark ? '#1A1A1A' : '#E0DDD8'}`, display: 'flex', flexDirection: 'column', gap: 6 }}>
   <button onClick={toggle} style={{
-    background: 'transparent', color: '#555',
-    border: '1px solid #1E1E1E', borderRadius: 7,
+    background: 'transparent', color: isDark ? '#555' : '#888',
+border: `1px solid ${isDark ? '#1E1E1E' : '#E0DDD8'}`, borderRadius: 7,
     padding: collapsed ? '10px 0' : '10px 12px',
     cursor: 'pointer', fontSize: 12,
     fontFamily: '"DM Mono", monospace',
@@ -162,8 +162,8 @@ export function Navbar({ tab, setTab }) {
     {!collapsed && <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>}
   </button>
         <button onClick={signOut} style={{
-          background: 'transparent', color: '#444',
-          border: '1px solid #1E1E1E', borderRadius: 7,
+          background: 'transparent', color: isDark ? '#444' : '#888',
+border: `1px solid ${isDark ? '#1E1E1E' : '#E0DDD8'}`, borderRadius: 7,
           padding: collapsed ? '10px 0' : '10px 12px',
           cursor: 'pointer', fontSize: 12,
           fontFamily: '"DM Mono", monospace',
